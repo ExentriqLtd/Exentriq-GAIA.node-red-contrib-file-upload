@@ -30,6 +30,11 @@ module.exports = function(RED) {
 
     this.on('input', function(msg) {
 
+      var headers = msg.headers || {};
+      headers['Cookie']=((msg.cookie)? msg.cookie : "");
+
+      var file = msg.filepath || n.file;
+
       var options = {
         uploadUrl: n.url,
         method: 'POST',
@@ -37,16 +42,15 @@ module.exports = function(RED) {
         fields: {
           'script': '{"file":"%s"}'
         },
-        uploadHeaders:{
-          'Cookie':((msg.cookie)? msg.cookie : "")
-        }
+        uploadHeaders:headers
       };
 
-      poster.post(n.file, options, function(err, data) {
+      poster.post(file, options, function(err, data) {
         if (!err) {
           msg.payload = data;
           _this.send(msg);
         } else {
+           console.log(err);
           _this.error(err);
         }
       });
