@@ -16,7 +16,7 @@
 
 module.exports = function(RED) {
   'use strict';
-  var poster = require('poster');
+  var poster = require('./poster/poster');
 
   function FileUploadNode(n) {
     RED.nodes.createNode(this, n);
@@ -45,7 +45,13 @@ module.exports = function(RED) {
         uploadHeaders:headers
       };
 
-      poster.post(file, options, function(err, data) {
+      var customOptions = {};
+
+      if(msg.hasOwnProperty('rejectUnauthorized')){
+        customOptions.rejectUnauthorized = msg.rejectUnauthorized;
+      }
+
+      poster.post(file, options, customOptions, function(err, data) {
         if (!err) {
           msg.payload = data;
           _this.send(msg);

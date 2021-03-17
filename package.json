@@ -3,7 +3,6 @@
   "version": "0.0.5",
   "description": "A Node-RED node for file upload.",
   "dependencies": {
-    "poster":""
   },
   "repository": {
     "type": "git",
